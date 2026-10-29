@@ -34,9 +34,9 @@ describe('Coffee API (e2e)', () => {
     const res = await request(app.getHttpServer()).get('/coffees');
     for (const item of res.body) {
       expect(item).toEqual({
-        id: expect.any(Number),
+        id: expect.any(String),
         name: expect.any(String),
-        priceUsd: expect.any(Number),
+        priceUAH: expect.any(Number),
       });
     }
   });
