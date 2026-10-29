@@ -8,4 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3 #клонирует гит репозиторий
-        
+      - name: Установка зависимостей
+        run: npm ci
+      - name: Линтинг
+        run: npm run lint
+      - name: Запуск тестов
+        run: npm run test
