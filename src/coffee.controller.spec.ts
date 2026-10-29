@@ -19,7 +19,7 @@ describe('CoffeeController', () => {
     expect(controller.findAll().map((c) => c.name)).toEqual([
       'Espresso',
       'Cappuccino',
-      'Latte1',
+      'Latte',
     ]);
   });
 
