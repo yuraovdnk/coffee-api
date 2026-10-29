@@ -21,7 +21,7 @@ describe('Coffee API (e2e)', () => {
   it('GET /coffees returns 200 and the menu', async () => {
     const res = await request(app.getHttpServer()).get('/coffees').expect(200);
     expect(res.body).toHaveLength(3);
-    expect(res.body[0]).toMatchObject({ name: 'Espresso' });
+    expect(res.body[0]).toMatchObject({ name: 'Espresso1' });
   });
 
   it('GET /coffees responds with JSON', async () => {
