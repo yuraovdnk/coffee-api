@@ -14,3 +14,5 @@ jobs:
         run: npm run lint
       - name: Запуск тестов
         run: npm run test
+      - name: Сборка docker image
+        run: docker build -t ${{secrets.DOCKER_USER}}/my-app:${{github.sha}} .
