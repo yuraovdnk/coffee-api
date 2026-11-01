@@ -15,8 +15,8 @@ describe('CoffeeService', () => {
   });
 
   it('has positive prices and non-empty names', () => {
-    if(process.version.startsWith('v22')) {
-      throw new Error('Node.js v22 has a known issue with Intl.NumberFormat that affects this test. Please use Node.js v20 or v21.');
+    if(process.version.startsWith('v24')) {
+      throw new Error('Node.js v24 has a known issue with Intl.NumberFormat that affects this test. Please use Node.js v20 or v21.');
     }
 
     for (const c of service.findAll()) {
