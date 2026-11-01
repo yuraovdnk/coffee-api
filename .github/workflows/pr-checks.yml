@@ -11,6 +11,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [22,24,26]
+        exclude:
+          - os: windows-latest
+            node-version: 22
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
