@@ -1,5 +1,6 @@
 name: PR Checks
 on:
+  workflow_call:
   pull_request:
     branches: [main]
 
@@ -7,10 +8,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3 #клонирует гит репозиторий
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
       - name: Установка зависимостей
         run: npm ci
       - name: Линтинг
         run: npm run lint
-      - name: Запуск тестов weqw
+      - name: Запуск тестов
         run: npm run test
