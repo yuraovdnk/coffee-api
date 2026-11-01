@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Сборка docker image
-        run: docker build -t ${{secrets.DOCKER_USER}}/my-app:${{github.sha}} ./
+        run: docker build -t ${{secrets.DOCKER_USER}}/my-app:${{github.sha}} .
       - name: Вход в Docker Hub
         run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
       - name : Публикация Docker image
