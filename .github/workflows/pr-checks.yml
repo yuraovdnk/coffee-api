@@ -15,7 +15,7 @@ jobs:
           - os: windows-latest
             node-version: 22
         include:
-            node-version: 24
+          - node-version: 24
             experimental: true
     continue-on-error: ${{ matrix.experimental == true }}
     steps:
