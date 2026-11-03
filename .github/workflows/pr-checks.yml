@@ -30,8 +30,14 @@ jobs:
         with: 
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - name: До npm ci
+        run: |
+          ls node_modules | wc -l
+          touch node_modules/metka.txt
       - name: Установка зависимостей
         run: npm ci
+      - name: После npm ci
+        run: ls node_modules/metka.txt || echo "МЕТКИ НЕТ"
       - name: Линтинг
         run: npm run lint
       - name: Запуск тестов
