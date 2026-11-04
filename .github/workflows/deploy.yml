@@ -19,7 +19,7 @@ jobs:
         run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
       - name : Публикация Docker image
         run: docker push ${{secrets.DOCKER_USER}}/my-app:${{github.sha}}
-      - name: Деплой на сервер
+      - name: Деплой на сервер!
         uses: appleboy/ssh-action@v0.1.6
         with: 
           host: ${{secrets.SSH_HOST }}
