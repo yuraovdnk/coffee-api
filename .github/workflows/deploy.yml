@@ -19,13 +19,17 @@ jobs:
         run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
       - name : Публикация Docker image
         run: docker push ${{secrets.DOCKER_USER}}/my-app:${{github.sha}}
-      - name: Деплой на сервер!
-        uses: appleboy/ssh-action@v0.1.6
-        with: 
-          host: ${{secrets.SSH_HOST }}
-          username: ${{secrets.SERVER_USER}}
-          key: ${{secrets.SSH_PRIVATE_KEY}}
-          script: |
-            docker pull ${{secrets.DOCKER_USER}}/my-app:${{github.sha}}
-            docker run -d --rm --name my-app -p 4000:3000 ${{secrets.DOCKER_USER}}/my-app:${{github.sha}}
+      - name: Notify Telegram
+        if: always()
+        run: |
+          STATUS="${{ job.status }}"
+          if [ "$STATUS" = "success" ]; then
+            TEXT="✅ Деплой успешен%0A${{ github.repository }} @ ${{ github.ref_name }}"
+          else
+            TEXT="❌ Деплой упал%0A${{ github.repository }} @ ${{ github.ref_name }}%0AСмотри: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          fi
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d "text=$TEXT"
+
         
