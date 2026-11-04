@@ -34,5 +34,5 @@ jobs:
         run: npm ci
       - name: Линтинг
         run: npm run lint
-      - name: Запуск тестов !
+      - name: Запуск тестов !!
         run: npm run test
