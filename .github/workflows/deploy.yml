@@ -21,8 +21,8 @@ jobs:
 
       - name: Build and push Docker image
         env: 
-          IMAGE_SHA: $DOCKER_USER/my-app:${{github.sha}}
-          IMAGE_LATEST : $DOCKER_USER/my-app:latest
+          IMAGE_SHA: ${{env.DOCKER_USER}}/my-app:${{github.sha}}
+          IMAGE_LATEST : ${{env.DOCKER_USER}}/my-app:latest
         run: |
           docker build -t $IMAGE_SHA -t $IMAGE_LATEST .
           docker push $IMAGE_SHA
