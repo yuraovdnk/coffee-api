@@ -6,30 +6,41 @@ on:
 jobs:
   checks: 
     uses: ./.github/workflows/pr-checks.yml
-  deploy:
+  build :
     needs: checks
     runs-on: ubuntu-latest
-    
+    env: 
+      DOCKER_USER: ${{secrets.DOCKER_USER}}
+      DOCKER_PASS: ${{secrets.DOCKER_PASSWORD}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Сборка docker image
-        run: docker build -t ${{secrets.DOCKER_USER}}/my-app:${{github.sha}} .
-      - name: Вход в Docker Hub
-        run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
-      - name : Публикация Docker image
-        run: docker push ${{secrets.DOCKER_USER}}/my-app:${{github.sha}}
-      - name: Notify Telegram
-        if: always()
-        run: |
-          STATUS="${{ job.status }}"
-          if [ "$STATUS" = "success" ]; then
-            TEXT="✅ Деплой успешен%0A${{ github.repository }} @ ${{ github.ref_name }}"
-          else
-            TEXT="❌ Деплой упал%0A${{ github.repository }} @ ${{ github.ref_name }}%0AСмотри: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          fi
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d "text=$TEXT"
 
-        
+      - name: Вход в Docker Hub
+        run: echo ${{secrets.DOCKER_PASS}} | docker login -u "$DOCKER_USER" --password-stdin
+
+      - name: Build and push Docker image
+        env: 
+          IMAGE_SHA: ${{$DOCKER_USER"/my-app:${{github.sha}}"}}
+          IMAGE_LATEST : ${{"$DOCKER_USER"/my-app:latest}}
+        run: |
+          docker build -t $IMAGE_SHA -t $IMAGE_LATEST .
+          docker push $IMAGE_SHA
+          docker push $IMAGE_LATEST
+
+
+  # #deploy:
+  #   needs: checks
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Сборка docker image
+  #       run: docker build -t "$DOCKER_USER"/my-app:${{github.sha}} .
+  #     - name: Вход в Docker Hub
+  #       run: echo ${{secrets.DOCKER_PASSWORD}} | docker login -u ${{secrets.DOCKER_USER}} --password-stdin
+  #     - name : Публикация Docker image
+  #       run: docker push ${{secrets.DOCKER_USER}}/my-app:${{github.sha}}
+  # notify:
+  #   needs: [checks, deploy]
+  #   uses: ./.github/workflows/notify.yml
